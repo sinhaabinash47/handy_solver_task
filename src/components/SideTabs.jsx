@@ -1,19 +1,24 @@
 import React from "react";
 
-export const SideTab = ({ sideTabData, getLocalStorageDataByKeyName }) => {
+export const SideTab = ({
+  sideTabData,
+  activeSideTabOption,
+  getLocalStorageDataByKeyName,
+}) => {
   return (
-    <div>
-      <div className="p-2 border-t border-l border-b border-black bg-white">
-        New Job +
-      </div>
+    <div className="" style={{}}>
       {sideTabData?.length > 0 &&
         sideTabData?.map((item, index) => (
           <div
             key={index}
-            className="p-2 border border-black bg-slate-200 cursor-pointer"
-            onClick={(e) => getLocalStorageDataByKeyName(item)}
+            className={`p-2  border-black bg-slate-200 cursor-pointer ${
+              activeSideTabOption === item?.keyName
+                ? "active-sidebar-overflow border-l border-b border-t"
+                : "border"
+            }`}
+            onClick={(e) => getLocalStorageDataByKeyName(item?.keyName)}
           >
-            {item}
+            {item?.keyName}
           </div>
         ))}
     </div>

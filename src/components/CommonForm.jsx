@@ -37,13 +37,14 @@ export const CommonForm = ({
     dispatchFun((prev) => ({ ...prev, checked: value }));
   };
 
+
   return (
     <div>
       <div className="">
         <div className="w-full max-w-xl mx-auto">
           <div>
             <div className="job-info py-2 mb-5">
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex flex-col md:flex-row md:items-center md:gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
@@ -54,7 +55,7 @@ export const CommonForm = ({
                     className="h-6 w-6 accent-white focus:outline-none"
                   />
                 </div>
-                <div className="flex flex-grow items-center">
+                <div className="flex-grow mt-2 md:mt-0">
                   <input
                     type="text"
                     placeholder="Job Post Title"
@@ -62,10 +63,10 @@ export const CommonForm = ({
                     onChange={(e) =>
                       onChangeHandler(e.target.value, setJobPost)
                     }
-                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none mr-2 w-full"
+                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none w-50"
                   />
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center mt-2 md:mt-0">
                   <label
                     htmlFor="switch"
                     className="flex items-center cursor-pointer"
@@ -73,7 +74,7 @@ export const CommonForm = ({
                     <div className="mr-2">Active? </div>
                     <button
                       className={`transition ease-in-out duration-300 w-12 bg-gray-200 rounded-full focus:outline-none 
-              ${toggle ? "bg-green-700" : ""}`}
+          ${toggle ? "bg-green-700" : ""}`}
                       onClick={() => setToggle(!toggle)}
                     >
                       <div
@@ -86,7 +87,7 @@ export const CommonForm = ({
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
@@ -114,7 +115,7 @@ export const CommonForm = ({
                 />
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
@@ -145,43 +146,37 @@ export const CommonForm = ({
                 />
               </div>
 
-              <div className="mb-4 flex gap-2">
-                <div className="mb-4 flex justify-around gap-2">
-                  <div className="flex items-start">
-                    <input
-                      type="checkbox"
-                      checked={isCheckedExp}
-                      onChange={(e) =>
-                        onChangeCheckedHandler(
-                          e.target.checked,
-                          setIsCheckedExp
-                        )
-                      }
-                      className="h-6 w-6 accent-white focus:outline-none"
-                    />
-                  </div>
-                  <div className="flex flex-grow items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 mb-3 gap-4">
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isCheckedExp}
+                    onChange={(e) =>
+                      onChangeCheckedHandler(e.target.checked, setIsCheckedExp)
+                    }
+                    className="h-6 w-6 accent-white focus:outline-none"
+                  />
+                  <div className="items-center">
                     <p className="underline">Experience Range (Yrs)</p>
                   </div>
                 </div>
-                <div className="w-full md:w-3/12 mb-4 md:mb-0">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between">
                   <div className="relative">
                     <select
-                      className="block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
-                      id="job-type"
+                      className="block appearance-none w-full md:w-32 bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
+                      id="min-exp"
                       value={minExp}
                       onChange={(e) => setMinExp(e.target.value)}
-                      name="job-type"
+                      name="min-exp"
                     >
-                      <option defaultValue="" disabled>
+                      <option value="" disabled>
                         Min
                       </option>
-                      <option defaultValue={"0"}>0</option>
-                      <option defaultValue={"1"}>1</option>
-                      <option defaultValue={"2"}>2</option>
-                      <option defaultValue={"3"}>3</option>
-                      <option defaultValue={"4"}>4</option>
-                      <option defaultValue={"5"}>5</option>
+                      {[0, 1, 2, 3, 4, 5].map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg
@@ -193,25 +188,22 @@ export const CommonForm = ({
                       </svg>
                     </div>
                   </div>
-                </div>
-                <div className="w-full md:w-3/12 mb-4 md:mb-0">
                   <div className="relative">
                     <select
-                      className="block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
-                      id="job-type"
+                      className="block appearance-none w-full md:w-32 bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
+                      id="max-exp"
                       value={maxExp}
                       onChange={(e) => setMaxExp(e.target.value)}
-                      name="job-type"
+                      name="max-exp"
                     >
                       <option value="" disabled>
                         Max
                       </option>
-                      <option value={"0"}>0</option>
-                      <option value={"1"}>1</option>
-                      <option value={"2"}>2</option>
-                      <option value={"3"}>3</option>
-                      <option value={"4"}>4</option>
-                      <option value={"5"}>5</option>
+                      {[0, 1, 2, 3, 4, 5].map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg
@@ -226,11 +218,11 @@ export const CommonForm = ({
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
-                    value={qualification?.checked}
+                    checked={qualification?.checked}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setQualification)
                     }
@@ -250,11 +242,11 @@ export const CommonForm = ({
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
-                    value={salaryRange?.checked}
+                    checked={salaryRange?.checked}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setSalaryRange)
                     }
@@ -269,16 +261,16 @@ export const CommonForm = ({
                       onChangeHandler(e.target.value, setSalaryRange)
                     }
                     placeholder="Salary Range"
-                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none mr-2 w-full"
+                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none w-50"
                   />
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
-                    value={statement?.checked}
+                    checked={statement?.checked}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setStatement)
                     }
@@ -299,11 +291,11 @@ export const CommonForm = ({
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
-                    value={company?.checked}
+                    checked={company?.checked}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setCompany)
                     }
@@ -318,16 +310,16 @@ export const CommonForm = ({
                       onChangeHandler(e.target.value, setCompany)
                     }
                     placeholder="Company"
-                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none mr-2 w-full"
+                    className="border w-50 border-gray-300 rounded-md px-4 py-2 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="mb-4 flex justify-around gap-2">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex items-start">
                   <input
                     type="checkbox"
-                    value={jobLocation?.checked}
+                    checked={jobLocation?.checked}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setJobLocation)
                     }
@@ -342,28 +334,24 @@ export const CommonForm = ({
                       onChangeHandler(e.target.value, setJobLocation)
                     }
                     placeholder="Job Location (Map Search)"
-                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none mr-2 w-full"
+                    className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none w-50"
                   />
                 </div>
               </div>
 
-              <div className="mb-4 flex gap-2">
-                <div className="mb-4 flex justify-around gap-2">
-                  <div className="flex items-start">
-                    <input
-                      type="checkbox"
-                      value={jobType?.checked}
-                      onChange={(e) =>
-                        onChangeCheckedHandler(e.target.checked, setJobType)
-                      }
-                      className="h-6 w-6 accent-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="w-full md:w-3/12 mb-4 md:mb-0">
-                  <div className="relative">
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-12 lg:col-span-6 flex gap-2 items-center">
+                  <input
+                    type="checkbox"
+                    checked={jobType?.checked}
+                    onChange={(e) =>
+                      onChangeCheckedHandler(e.target.checked, setJobType)
+                    }
+                    className="h-6 w-6 accent-white focus:outline-none"
+                  />
+                  <div className="relative w-full">
                     <select
-                      className="block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
+                      className="block appearance-none bg-white border border-gray-400 text-gray-700 py-2 px-5 rounded leading-tight focus:outline-none focus:border-gray-500 w-full"
                       id="job-type"
                       value={jobType?.data}
                       onChange={(e) =>
@@ -390,22 +378,18 @@ export const CommonForm = ({
                   </div>
                 </div>
 
-                <div className="mb-4 flex justify-around gap-2">
-                  <div className="flex items-start">
-                    <input
-                      type="checkbox"
-                      value={jobMode?.checked}
-                      onChange={(e) =>
-                        onChangeCheckedHandler(e.target.checked, setJobMode)
-                      }
-                      className="h-6 w-6 accent-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="w-full md:w-3/12 mb-4 md:mb-0">
-                  <div className="relative">
+                <div className="col-span-12 lg:col-span-6 flex justify-end items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={jobMode?.checked}
+                    onChange={(e) =>
+                      onChangeCheckedHandler(e.target.checked, setJobMode)
+                    }
+                    className="h-6 w-6 accent-white focus:outline-none"
+                  />
+                  <div className="relative w-full">
                     <select
-                      className="block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500"
+                      className="block appearance-none bg-white border border-gray-400 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:border-gray-500 w-full"
                       id="job-type"
                       value={jobMode?.data}
                       onChange={(e) =>

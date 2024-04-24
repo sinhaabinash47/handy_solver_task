@@ -5,9 +5,13 @@ import { LivePreview } from "./components/LivePreview";
 import { SideTab } from "./components/SideTabs";
 
 function App() {
+  const [activeSideTabOption, setActiveSideTabOption] = useState("New Jobs +");
+  const [refresh, setRefresh] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [jobPost, setJobPost] = useState({ checked: false, data: "" });
-  const [sideTabData, setSideTabData] = useState([]);
+  const [sideTabData, setSideTabData] = useState([
+    { keyName: "New Jobs +", allData: [] },
+  ]);
   const [introduction, setIntroduction] = useState({
     checked: false,
     data: "",
@@ -29,78 +33,99 @@ function App() {
   const [jobLocation, setJobLocation] = useState({ checked: false, data: "" });
   const [jobType, setJobType] = useState({ checked: false, data: "" });
   const [jobMode, setJobMode] = useState({ checked: false, data: "" });
-
-  const addJobPost = () => {
-    setSideTabData((prev) => [...prev, `Job Post ${sideTabData?.length + 1}`]);
-    // const payload =
-    // console.log("sideTab",sideTabData);
-    // const data = [...sid]
-    // addObjectToLocalStorage(`Job Post ${sideTabData?.length+1}`)
+  const toggleRefresh = () => {
+    setRefresh((prev) => !prev);
+  };
+  const addJobPost = (keyName) => {
+    if(keyName==="New Jobs +"){
+    let copyMainData = [...sideTabData]?.filter(
+      (item) => item?.keyName !== "New Jobs +"
+    );
+    setSideTabData((prev) => [
+      ...prev,
+      {
+        keyName: `Job Post ${copyMainData?.length + 1}`,
+        allData: {
+          toggle,
+          isCheckedExp,
+          jobPost,
+          introduction,
+          minExp,
+          maxExp,
+          responsibility,
+          qualification,
+          salaryRange,
+          statement,
+          company,
+          jobLocation,
+          jobType,
+          jobMode,
+        },
+      },
+    ]);
+    let payload = [...sideTabData]?.filter(
+      (item) => item?.keyName !== "New Jobs +"
+    );
+    payload.push({
+      keyName: `Job Post ${payload?.length + 1}`,
+      allData: {
+        toggle,
+        isCheckedExp,
+        jobPost,
+        introduction,
+        minExp,
+        maxExp,
+        responsibility,
+        qualification,
+        salaryRange,
+        statement,
+        company,
+        jobLocation,
+        jobType,
+        jobMode,
+      },
+    });
+    addObjectToLocalStorage(payload);
+  }
   };
 
   useEffect(() => {
     const localStorageData = retrieveObjectFromLocalStorage();
-    console.log(localStorageData, 'localStorageData')
     if (localStorageData?.length > 0) setSideTabDataHandler(localStorageData);
-  }, []);
+  }, [refresh]);
 
-  useEffect(() => {
-    if (sideTabData?.length > 0) {
-      const data = sideTabData?.map((item, index) => {
-        return {
-          keyName: `Job Post ${index + 1}`,
-          allData: {
-            toggle,
-            isCheckedExp,
-            jobPost,
-            introduction,
-            minExp,
-            maxExp,
-            responsibility,
-            qualification,
-            salaryRange,
-            statement,
-            company,
-            jobLocation,
-            jobType,
-            jobMode,
-          },
-        };
-      });
-
-      localStorage.setItem("jobManager", JSON.stringify(data));
-      // addObjectToLocalStorage(data);
-    }
-  }, [sideTabData]);
-
-  // const addObjectToLocalStorage = (data) => {
-  //   const dataToBeSet = JSON.stringify(data);
-  //   localStorage.setItem("jobManager", dataToBeSet);
-  // };
+  const addObjectToLocalStorage = async (data) => {
+    const dataToBeSet = JSON.stringify(data);
+    localStorage.setItem("jobManager", dataToBeSet);
+  };
 
   const retrieveObjectFromLocalStorage = () => {
     const objectString = localStorage.getItem("jobManager");
-    return JSON.parse(objectString) || [];
-    // const parsedObject = JSON.parse(objectString);
-    // return parsedObject;
+    const parsedObject = JSON.parse(objectString);
+    return parsedObject;
   };
   const setSideTabDataHandler = (data) => {
-    const mainData = data?.map((item) => item?.keyName);
-    setSideTabData(mainData ||  []);
+    const sideTabDataCopy = [{ keyName: "New Jobs +", allData: [] }, ...data];
+    setSideTabData(sideTabDataCopy);
   };
 
   const getLocalStorageDataByKeyName = (keyName) => {
-    const localStorageData = retrieveObjectFromLocalStorage();
-    const dataById = localStorageData?.find(
-      (item) => item?.keyName === keyName
-    );
-    setSpecificDataForJobs(dataById?.allData);
+    if (keyName === "New Jobs +") {
+      resetAllFormData();
+    } else {
+      const localStorageData = retrieveObjectFromLocalStorage();
+      const dataById = localStorageData?.find(
+        (item) => item?.keyName === keyName
+      );
+      setSpecificDataForJobs(dataById?.allData);
+    }
+    setActiveSideTabOption(keyName);
   };
 
   const setSpecificDataForJobs = (allData) => {
     setToggle(allData?.toggle);
     setIsCheckedExp(allData?.isCheckedExp);
-    setJobPost(allData?.setJobPost),
+    setJobPost(allData?.jobPost),
       setIntroduction(allData?.introduction),
       setMinExp(allData?.minExp),
       setMaxExp(allData?.maxExp),
@@ -113,7 +138,62 @@ function App() {
       setJobType(allData?.jobType),
       setJobMode(allData?.jobMode);
   };
-  
+
+  const resetAllFormData = () => {
+    setToggle(false);
+    setIsCheckedExp(false);
+    setJobPost({ checked: false, data: "" }),
+      setIntroduction({ checked: false, data: "" }),
+      setMinExp(""),
+      setMaxExp(""),
+      setResponsibility({ checked: false, data: "" }),
+      setQualification({ checked: false, data: "" }),
+      setSalaryRange({ checked: false, data: "" }),
+      setStatement({ checked: false, data: "" }),
+      setCompany({ checked: false, data: "" }),
+      setJobLocation({ checked: false, data: "" }),
+      setJobType({ checked: false, data: "" }),
+      setJobMode({ checked: false, data: "" });
+  };
+  const deleteDataByKeyName = (keyName) => {
+    if (keyName !== "New Jobs +") {
+      const allLocalData = retrieveObjectFromLocalStorage();
+      const filterLocalData = allLocalData?.filter(
+        (item) => item?.keyName !== keyName
+      );
+      const rearrangeData = reArrangeData(filterLocalData)
+      addObjectToLocalStorage(rearrangeData);
+      resetAllFormData();
+      setSideTabDataHandler(rearrangeData)
+      setActiveSideTabOption("New Jobs +")
+      toggleRefresh();
+    }
+  };
+
+  const reArrangeData = (data)=>{
+    const sortedData = data?.map((item,index)=>{
+      return{
+        ...item,
+        keyName:`Job Post ${index + 1}`
+      }
+    })
+    return sortedData
+  }
+
+  const duplicateJobByKeyName = (keyName) => {
+    if (keyName !== "New Jobs +") {
+      let allLocalData = retrieveObjectFromLocalStorage();
+      let isFound = allLocalData?.find((item) => item?.keyName === keyName);
+      if (isFound) {
+        let modifiedObject = { ...isFound };
+        modifiedObject.keyName = `Job Post ${allLocalData?.length + 1}`;
+        allLocalData.push(modifiedObject);
+        addObjectToLocalStorage(allLocalData);
+        toggleRefresh();
+      }
+    }
+  };
+
   return (
     <div>
       <div className="bg-gray-800 text-white py-1 px-2 flex justify-between items-center">
@@ -130,11 +210,12 @@ function App() {
             <div className="col-span-2">
               {" "}
               {/*  h-full */}
-              <div className="mt-8" style={{ overflowY: "auto" }}>
+              <div className="mt-8" style={{ overflowY: "" }}>
                 {" "}
                 {/*  h-full */}
                 <SideTab
                   sideTabData={sideTabData}
+                  activeSideTabOption={activeSideTabOption}
                   getLocalStorageDataByKeyName={getLocalStorageDataByKeyName}
                 />
               </div>
@@ -179,15 +260,21 @@ function App() {
             </div>
             <div className="col-span-2">
               <div className="border-t border-r border-b mt-4 flex flex-col  justify-center border-black h-20 w-full p-2">
-                <div onClick={addJobPost} className="cursor-pointer">
+                <div onClick={()=>addJobPost(activeSideTabOption)} className="cursor-pointer">
                   <i className="fa-solid fa-plus"></i>
                   <span className="ml-2">Add</span>
                 </div>
-                <div className="cursor-pointer">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => deleteDataByKeyName(activeSideTabOption)}
+                >
                   <i className="fa-solid fa-trash-can text-red-500"></i>
                   <span className="ml-2">Delete</span>
                 </div>
-                <div className="cursor-pointer">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => duplicateJobByKeyName(activeSideTabOption)}
+                >
                   <i className="fa-solid fa-copy text-blue-500"></i>
                   <span className="ml-2">Duplicate</span>
                 </div>
