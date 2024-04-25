@@ -50,7 +50,7 @@ export const CommonForm = ({
                   onChange={(e) =>
                     onChangeCheckedHandler(e.target.checked, setJobPost)
                   }
-                  className="h-6 w-6 accent-white focus:outline-none"
+                  className="h-6 w-6 accent-white focus:outline-none border-2"
                 />
               </div>
               <div className="flex-grow mt-2 md:mt-0">
