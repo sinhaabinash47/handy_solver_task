@@ -222,7 +222,7 @@ function App() {
             <div className="col-span-8">
               <div
                 className="border border-black h-screen w-full p-4"
-                style={{ overflowY: "auto", height: "40rem" }}
+                style={{ overflowY: "auto", height: "40rem", backgroundColor:"rgb(201 198 198 / 16%)" }}
               >
                 {/* forms */}
                 <CommonForm

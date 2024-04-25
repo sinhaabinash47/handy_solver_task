@@ -146,7 +146,7 @@ export const CommonForm = ({
                 <div className="flex gap-2">
                   <input
                     type="checkbox"
-                    checked={isCheckedExp}
+                    value={isCheckedExp}
                     onChange={(e) =>
                       onChangeCheckedHandler(e.target.checked, setIsCheckedExp)
                     }
