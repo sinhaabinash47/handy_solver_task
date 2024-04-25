@@ -33,18 +33,43 @@ function App() {
   const [jobLocation, setJobLocation] = useState({ checked: false, data: "" });
   const [jobType, setJobType] = useState({ checked: false, data: "" });
   const [jobMode, setJobMode] = useState({ checked: false, data: "" });
+
   const toggleRefresh = () => {
     setRefresh((prev) => !prev);
   };
+
   const addJobPost = (keyName) => {
-    if(keyName==="New Jobs +"){
-    let copyMainData = [...sideTabData]?.filter(
-      (item) => item?.keyName !== "New Jobs +"
-    );
-    setSideTabData((prev) => [
-      ...prev,
-      {
-        keyName: `Job Post ${copyMainData?.length + 1}`,
+    if (keyName === "New Jobs +") {
+      let copyMainData = [...sideTabData]?.filter(
+        (item) => item?.keyName !== "New Jobs +"
+      );
+      setSideTabData((prev) => [
+        ...prev,
+        {
+          keyName: `Job Post ${copyMainData?.length + 1}`,
+          allData: {
+            toggle,
+            isCheckedExp,
+            jobPost,
+            introduction,
+            minExp,
+            maxExp,
+            responsibility,
+            qualification,
+            salaryRange,
+            statement,
+            company,
+            jobLocation,
+            jobType,
+            jobMode,
+          },
+        },
+      ]);
+      let payload = [...sideTabData]?.filter(
+        (item) => item?.keyName !== "New Jobs +"
+      );
+      payload.push({
+        keyName: `Job Post ${payload?.length + 1}`,
         allData: {
           toggle,
           isCheckedExp,
@@ -61,32 +86,9 @@ function App() {
           jobType,
           jobMode,
         },
-      },
-    ]);
-    let payload = [...sideTabData]?.filter(
-      (item) => item?.keyName !== "New Jobs +"
-    );
-    payload.push({
-      keyName: `Job Post ${payload?.length + 1}`,
-      allData: {
-        toggle,
-        isCheckedExp,
-        jobPost,
-        introduction,
-        minExp,
-        maxExp,
-        responsibility,
-        qualification,
-        salaryRange,
-        statement,
-        company,
-        jobLocation,
-        jobType,
-        jobMode,
-      },
-    });
-    addObjectToLocalStorage(payload);
-  }
+      });
+      addObjectToLocalStorage(payload);
+    }
   };
 
   useEffect(() => {
@@ -155,30 +157,31 @@ function App() {
       setJobType({ checked: false, data: "" }),
       setJobMode({ checked: false, data: "" });
   };
+
   const deleteDataByKeyName = (keyName) => {
     if (keyName !== "New Jobs +") {
       const allLocalData = retrieveObjectFromLocalStorage();
       const filterLocalData = allLocalData?.filter(
         (item) => item?.keyName !== keyName
       );
-      const rearrangeData = reArrangeData(filterLocalData)
+      const rearrangeData = reArrangeData(filterLocalData);
       addObjectToLocalStorage(rearrangeData);
       resetAllFormData();
-      setSideTabDataHandler(rearrangeData)
-      setActiveSideTabOption("New Jobs +")
+      setSideTabDataHandler(rearrangeData);
+      setActiveSideTabOption("New Jobs +");
       toggleRefresh();
     }
   };
 
-  const reArrangeData = (data)=>{
-    const sortedData = data?.map((item,index)=>{
-      return{
+  const reArrangeData = (data) => {
+    const sortedData = data?.map((item, index) => {
+      return {
         ...item,
-        keyName:`Job Post ${index + 1}`
-      }
-    })
-    return sortedData
-  }
+        keyName: `Job Post ${index + 1}`,
+      };
+    });
+    return sortedData;
+  };
 
   const duplicateJobByKeyName = (keyName) => {
     if (keyName !== "New Jobs +") {
@@ -196,7 +199,7 @@ function App() {
 
   return (
     <div>
-      <div className="bg-gray-800 text-white py-1 px-2 flex justify-between items-center">
+      <div className="bg-gray-800 text-white fixed top-0 w-full z-10 flex justify-between items-center">
         <div className="text-xl font-bold"></div>
         <div>
           <div className="text-xl font-bold">
@@ -204,15 +207,11 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-12 lg:h-screen p-3">
+      <div className="grid grid-cols-12 lg:h-screen p-2 mx-auto mt-7">
         <div className="col-span-12 lg:col-span-8 h-full">
           <div className="grid grid-cols-12 h-screen">
             <div className="col-span-2">
-              {" "}
-              {/*  h-full */}
-              <div className="mt-8" style={{ overflowY: "" }}>
-                {" "}
-                {/*  h-full */}
+              <div className="mt-8">
                 <SideTab
                   sideTabData={sideTabData}
                   activeSideTabOption={activeSideTabOption}
@@ -260,7 +259,10 @@ function App() {
             </div>
             <div className="col-span-2">
               <div className="border-t border-r border-b mt-4 flex flex-col  justify-center border-black h-20 w-full p-2">
-                <div onClick={()=>addJobPost(activeSideTabOption)} className="cursor-pointer">
+                <div
+                  onClick={() => addJobPost(activeSideTabOption)}
+                  className="cursor-pointer"
+                >
                   <i className="fa-solid fa-plus"></i>
                   <span className="ml-2">Add</span>
                 </div>
@@ -297,9 +299,10 @@ function App() {
                   left: "15px",
                 }}
               >
+                <i class="mr-2 text-blue-700 fa-solid fa-magnifying-glass"></i>
                 Live Preview
               </div>
-              <div className="mt-4">
+              <div className="mt-4" style={{ overflowY: "auto", height: "35rem" }}>
                 <LivePreview
                   toggle={toggle}
                   isCheckedExp={isCheckedExp}

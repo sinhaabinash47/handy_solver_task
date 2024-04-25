@@ -27,9 +27,10 @@ export const LivePreview = ({
             </div>
             <div className="flex gap-2">
               {jobMode?.checked && (
-                <button className="p-2 text-sm text-black bg-blue-400 rounded-full">
-                  {jobMode?.data}
-                </button>
+                 <button
+                 className="p-3 bg-blue-400 rounded-full">
+                 {jobMode?.data}
+               </button>
               )}
             </div>
           </div>
